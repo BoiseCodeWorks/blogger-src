@@ -8,9 +8,9 @@ import router from "./router";
 
 Vue.use(Vuex)
 
-// const baseURL = '/'
+const baseURL = '/api'
 
-const baseURL = localStorage.getItem('baseURL') || '//localhost:3000/api'
+// const baseURL = localStorage.getItem('baseURL') || '//localhost:3000/api'
 
 let _api = Axios.create({
   baseURL,
