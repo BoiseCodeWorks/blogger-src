@@ -1,31 +1,48 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <navigation />
+    <div class="container-fluid">
+      <router-view />
     </div>
-    <router-view/>
   </div>
 </template>
 
+<script>
+import Navigation from "@/components/Navigation.vue";
+export default {
+  name: "App",
+  components: { Navigation }
+};
+</script>
+
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+:root {
+  --main: #44494d;
+  --secondary: #03a9f4;
 }
-#nav {
-  padding: 30px;
+.color {
+  color: var(--main);
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.bg {
+  background: var(--main);
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.action {
+  cursor: pointer;
+  transition: all .15s linear;
+}
+.muted{
+  opacity: .85;
+}
+.action:hover .muted, .action:hover.muted{
+  opacity: 1;
+}
+.no-events {
+  pointer-events: none;
+}
+.ts-white {
+  text-shadow: 10px 2px white, -10px -2px white;
+}
+.w-fc {
+  width: fit-content;
 }
 </style>
