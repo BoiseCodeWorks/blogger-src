@@ -11,7 +11,7 @@
     <div class="blog-body" :style="{width: full ? '95%': '80%'}">
       <div class="blog-title mt-1">
         <h1>
-          <router-link :to="{name: 'blog', params:{slug: blog.slug}}">{{blog.title}}</router-link>
+          <router-link :to="{name: 'blog', params:{slug: blog.slug || blog._id}}">{{blog.title}}</router-link>
         </h1>
         <hr v-if="full" />
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class>
+  <div v-if="blog._id">
     <blog-card :blog="blog" :full="true" v-if="!editing" />
     <div class="card p-3" v-if="editing">
       <form @submit="save">
@@ -23,7 +23,7 @@
               maxlength="60"
             />
             <small class="ml-1">
-              <small>{{blog.title.length}}/60</small>
+              <small v-if="blog.title">{{blog.title.length}}/60</small>
             </small>
           </div>
         </div>
@@ -38,7 +38,7 @@
               maxlength="120"
             />
             <small class="ml-1">
-              <small>{{blog.summary.length}}/120</small>
+              <small v-if="blog.summary">{{blog.summary.length}}/120</small>
             </small>
           </div>
         </div>
@@ -94,6 +94,7 @@
       </div>
     </div>
   </div>
+  <div v-else>LOADING.....</div>
 </template>
 
 
@@ -105,7 +106,7 @@ export default {
   name: "Blog",
   data() {
     return {
-      editing: true
+      editing: false
     };
   },
   mounted() {

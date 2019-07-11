@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-function toast({ title, text = '', type = 'success', timer = 2500 }) {
+function toast({ title, text = '', type = 'success', timer = 5500 }) {
     return Swal.fire({
         title,
         text,

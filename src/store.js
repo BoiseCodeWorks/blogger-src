@@ -8,6 +8,8 @@ import router from "./router";
 
 Vue.use(Vuex)
 
+// const baseURL = '/'
+
 const baseURL = localStorage.getItem('baseURL') || '//localhost:3000/api'
 
 let _api = Axios.create({
@@ -17,17 +19,7 @@ let _api = Axios.create({
 
 export default new Vuex.Store({
   state: {
-    blogs: [{
-      _id: "123",
-      title: "What do you do when you don't know what to do",
-      slug: "a-slug",
-      body: "nothing",
-      author: "Jimbo Jones",
-      updatedAt: 1562832165111,
-      img: "https://assets3.thrillist.com/v1/image/2794471/size/sk-2017_04_standard_listing_desktop.jpg",
-      tags: ["javascript", "css", "html"],
-      summary: "120 characters max for the summary",
-    }],
+    blogs: [],
     blog: {}
   },
   mutations: {
@@ -100,9 +92,18 @@ export default new Vuex.Store({
         if (state.blog.slug == slug) { return }
         let b = state.blogs.find(b => b.slug == slug)
         if (b) { return commit('setBlog', b) }
-        let res = await _api.get("blogs/" + slug)
-        if (b) { return commit('setBlog', b) }
-      } catch (err) { toastError(err) }
+        let res = await _api.get("blogs?slug=" + slug)
+        if (res.data) { return commit('setBlog', res.data) }
+      } catch (err) { console.error(err) }
+      try {
+        let resId = await _api.get("blogs/" + slug)
+        if (resId.data) {
+          if (resId.data) {
+            commit('setBlog', resId.data)
+            throw new Error("Had to fetch post by Id instead of slug this is not the intended functionality, Did you forget to create a slug property in your schema")
+          }
+        }
+      } catch (e) { toastError(e) }
     },
     async saveBlog({ dispatch }, blog) {
       try {
@@ -115,9 +116,87 @@ export default new Vuex.Store({
       try {
         let res = await _api.delete("blogs/" + id)
         toast({ title: "Blog Removed" })
+        dispatch('getBlogs')
       } catch (e) { toastError(e) }
     },
     async runTests() {
+      var bdata = {
+        title: "__test__blog",
+        slug: "__test__blog",
+        author: "JIMMY TESTER"
+      }
+      let blog
+
+      try {
+        toast({ title: "Testing Blog Creation", type: "info" })
+        let res = await _api.post('blogs', bdata)
+        blog = res.data
+      } catch (e) {
+        return toastError(e)
+      }
+
+      try {
+        toast({ title: "Testing Blog Edit", type: "info" })
+        blog.body = "___THISISATEST___"
+        blog.tags = ["___TESTTAG___"]
+        let res = await _api.put("blogs/" + blog._id, blog)
+      } catch (e) {
+        return toastError(e)
+      }
+
+      try {
+        toast({ title: "Testing Find BlogById", type: "info" })
+        let res = await _api.get("blogs/" + blog._id)
+        if (!blog.body == res.data.body) {
+          throw new Error("Blog FoundById but edit failed")
+        }
+        blog = res.data
+      } catch (e) {
+        return toastError(e)
+      }
+
+      try {
+        toast({ title: "Testing Find Blog by Slug", type: "info" })
+        let res = await _api.get("blogs?slug=" + "__test__blog")
+        if (!res.data) {
+          throw new Error("Unable to find expected test blog by slug __test__blog are you sure your query is correct?")
+        }
+      } catch (e) {
+        return toastError(e)
+      }
+
+      try {
+        toast({ title: "Testing Find Blogs with Tag", type: "info" })
+        let res = await _api.get("blogs?tag=" + "___TESTTAG___")
+        if (!Array.isArray(res.data)) {
+          throw new Error("Unable to find blogs by tag an array should of returned")
+        }
+        if (res.data.length < 1) {
+          throw new Error("Unable to find expected test blog by tag ___TESTTAG___ are you sure your query is correct?")
+        }
+      } catch (e) {
+        return toastError(e)
+      }
+
+      try {
+        toast({ title: "Testing Blog Delete", type: "info" })
+        _api.delete("blogs/" + blog._id)
+      } catch (e) {
+        return toastError(e)
+      }
+
+      try {
+        let res = await _api.get("blogs/" + blog._id)
+        if (res.data) {
+          throw new Error("Test Blog should of been deleted so subsequent findById should of returned nothing or failed")
+        }
+      } catch (e) {
+        if (e.status == 200) {
+          return toastError(e)
+        }
+      }
+
+      toast({ title: "All tests successfully passed Excellent Job!!!", type: "success" })
 
     }
   }

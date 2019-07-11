@@ -32,16 +32,17 @@
         >
           <i class="fa fa-plus-circle"></i>
         </a>
-        <a
+        <!-- <a
           class="text-white action d-flex align-items-center justify-content-center"
           title="Set Port"
           @click="setBaseUrl"
         >
           <i class="fa fa-plug"></i>
-        </a>
+        </a>-->
         <a
           class="text-white action d-flex align-items-center justify-content-center"
           title="Run Tests"
+          @click="runTests"
         >
           <i class="fa fa-clipboard"></i>
         </a>
@@ -89,6 +90,9 @@ export default {
     },
     setBaseUrl() {
       this.$store.dispatch("setBaseURL");
+    },
+    runTests() {
+      this.$store.dispatch("runTests");
     }
   },
   components: { Navigation, BlogCard }
