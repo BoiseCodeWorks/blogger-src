@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-function toast({ title, text = '', type = 'success', timer = 1500 }) {
+function toast({ title, text = '', type = 'success', timer = 2500 }) {
     return Swal.fire({
         title,
         text,
@@ -19,7 +19,7 @@ function toast({ title, text = '', type = 'success', timer = 1500 }) {
 function toastError(error) {
     if (!error) { return toast({ title: "An uknown error occured", type: 'error' }) }
     let title = error.message || "An error occured"
-    if (!error.isAxiosError) { return toast({ title, type: 'error' }) }
+    if (!error.isAxiosError || !error.response) { return toast({ title, type: 'error' }) }
     let data = error.response.data
     let text = data.message ? data.message : data.error ? data.error : error.message
     title = `${error.code} ${title}`

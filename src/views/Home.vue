@@ -20,18 +20,29 @@
       </div>
     </div>
     <div class="__fab">
-      <input type="checkbox" name="adminToggle" class="__fab_toggle" />
-      <div class="__fab_button action muted">
+      <input type="checkbox" name="__fab_toggle" class="__fab_toggle" />
+      <div class="__fab_button action">
         <i class="fa fa-cog"></i>
       </div>
       <div class="__fab_buttons">
-        <a class="text-white action d-flex align-items-center justify-content-center" title="Add Blog" @click="createBlog">
+        <a
+          class="text-white action d-flex align-items-center justify-content-center"
+          title="Add Blog"
+          @click="createBlog"
+        >
           <i class="fa fa-plus-circle"></i>
         </a>
-        <a class="text-white action d-flex align-items-center justify-content-center" title="Set Port" @click="setBaseUrl">
+        <a
+          class="text-white action d-flex align-items-center justify-content-center"
+          title="Set Port"
+          @click="setBaseUrl"
+        >
           <i class="fa fa-plug"></i>
         </a>
-        <a class="text-white action d-flex align-items-center justify-content-center" title="Run Tests">
+        <a
+          class="text-white action d-flex align-items-center justify-content-center"
+          title="Run Tests"
+        >
           <i class="fa fa-clipboard"></i>
         </a>
       </div>
@@ -48,6 +59,9 @@ export default {
     return {
       query: ""
     };
+  },
+  mounted() {
+    this.$store.dispatch("getBlogs");
   },
   computed: {
     blogs() {
@@ -73,7 +87,7 @@ export default {
     createBlog() {
       this.$store.dispatch("createBlog");
     },
-    setBaseUrl(){
+    setBaseUrl() {
       this.$store.dispatch("setBaseURL");
     }
   },

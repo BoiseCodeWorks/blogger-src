@@ -4,6 +4,7 @@ import Axios from 'axios'
 import { toast, toastError } from "./swal-config";
 import Swal from "sweetalert2";
 import slugify from "slugify";
+import router from "./router";
 
 Vue.use(Vuex)
 
@@ -17,11 +18,12 @@ let _api = Axios.create({
 export default new Vuex.Store({
   state: {
     blogs: [{
+      _id: "123",
       title: "What do you do when you don't know what to do",
       slug: "a-slug",
       body: "nothing",
       author: "Jimbo Jones",
-      created: 1562832165111,
+      updatedAt: 1562832165111,
       img: "https://assets3.thrillist.com/v1/image/2794471/size/sk-2017_04_standard_listing_desktop.jpg",
       tags: ["javascript", "css", "html"],
       summary: "120 characters max for the summary",
@@ -29,6 +31,9 @@ export default new Vuex.Store({
     blog: {}
   },
   mutations: {
+    setBlogs(state, blogs = []) {
+      state.blogs = blogs
+    },
     setBlog(state, blog = {}) {
       state.blog = blog
     },
@@ -55,6 +60,12 @@ export default new Vuex.Store({
         }
       })
     },
+    async getBlogs({ commit, state }) {
+      try {
+        let res = await _api.get("blogs/")
+        commit('setBlogs', res.data)
+      } catch (err) { toastError(err) }
+    },
     async createBlog({ dispatch, commit }) {
       Swal.mixin({
         input: 'text',
@@ -74,7 +85,7 @@ export default new Vuex.Store({
         let blog = {
           title: val[1],
           author: val[0],
-          slug: slugify(val[1])
+          slug: slugify(val[1], { lower: true })
         }
         let res = await _api.post("blogs", blog)
         if (res.data._id) {
@@ -85,14 +96,29 @@ export default new Vuex.Store({
       } catch (e) { toastError(e) }
     },
     async getBlog({ commit, state }, slug) {
-      if (state.blog._slug == slug) { return }
-      let b = state.blogs.find(b => b._slug == slug)
-      if (b) { return commit('setBlog', b) }
-      let res = await _api.get("blogs/" + slug)
-      if (b) { return commit('setBlog', b) }
+      try {
+        if (state.blog.slug == slug) { return }
+        let b = state.blogs.find(b => b.slug == slug)
+        if (b) { return commit('setBlog', b) }
+        let res = await _api.get("blogs/" + slug)
+        if (b) { return commit('setBlog', b) }
+      } catch (err) { toastError(err) }
+    },
+    async saveBlog({ dispatch }, blog) {
+      try {
+        let res = await _api.put("blogs/" + blog._id, blog)
+        toast({ title: "Blog Updated" })
+        router.push({ name: "blog", params: { slug: blog.slug } })
+      } catch (e) { toastError(e) }
     },
     async deleteBlog({ dispatch }, id) {
-      await _api.delete("blogs/" + id)
+      try {
+        let res = await _api.delete("blogs/" + id)
+        toast({ title: "Blog Removed" })
+      } catch (e) { toastError(e) }
+    },
+    async runTests() {
+
     }
   }
 })

@@ -4,6 +4,10 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
+Vue.use(CKEditor);
+
 new Vue({
   router,
   store,

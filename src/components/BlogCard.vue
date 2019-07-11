@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-container">
+  <div class="blog-container" :style="{width: !full ? '50rem': '90%'}">
     <div class="blog-header">
       <div class="blog-cover" :style="{'background-image': `url(${blog.img})`}">
         <div class="blog-author">
@@ -8,14 +8,16 @@
       </div>
     </div>
 
-    <div class="blog-body">
-      <div class="blog-title">
+    <div class="blog-body" :style="{width: full ? '95%': '80%'}">
+      <div class="blog-title mt-1">
         <h1>
           <router-link :to="{name: 'blog', params:{slug: blog.slug}}">{{blog.title}}</router-link>
         </h1>
+        <hr v-if="full" />
       </div>
       <div class="blog-summary">
         <p>{{blog.summary}}</p>
+        <p v-if="full" v-html="blog.body"></p>
       </div>
       <div class="blog-tags">
         <ul>
@@ -26,9 +28,13 @@
       </div>
     </div>
 
-    <div class="blog-footer">
+    <div class="blog-footer" :style="{width: full ? '95%': '80%'}">
       <ul>
-        <li v-if="blog.created" class="published-date">{{blog.created | timeago}}</li>
+        <li v-if="blog.updatedAt" class="published-date">{{blog.updatedAt | timeago}}</li>
+        <li v-if="full" class="published-date">
+          <img src="../assets/blogger-logo.png" height="25" />
+          <span class="ml-1">{{blog.author}}</span>
+        </li>
       </ul>
     </div>
   </div>
@@ -41,7 +47,8 @@ export default {
     blog: {
       type: Object,
       required: true
-    }
+    },
+    full: { type: Boolean }
   },
   filters: {
     timeago(val) {
@@ -69,6 +76,8 @@ body {
   font-family: "Roboto", sans-serif;
   font-weight: 100;
   margin: 48px auto;
+  width: 95%;
+
 }
 @media screen and (min-width: 480px) {
   .blog-container {
@@ -82,7 +91,7 @@ body {
 }
 @media screen and (min-width: 959px) {
   .blog-container {
-    width: 50rem;
+    width: 95%;
   }
 }
 
@@ -168,7 +177,6 @@ body {
   margin-left: 0.5rem;
 }
 
-
 .blog-tags a {
   border: 1px solid #999999;
   border-radius: 3px;
@@ -184,12 +192,11 @@ body {
   width: 5rem;
 }
 
-.blog-tags li a:hover{
+.blog-tags li a:hover {
   border-color: #fff;
   background-color: var(--secondary);
   color: #fff !important;
 }
-
 
 .blog-footer {
   border-top: 1px solid #e6e6e6;
@@ -203,28 +210,21 @@ body {
   list-style: none;
   display: flex;
   flex: row wrap;
+  flex-wrap: wrap;
   justify-content: flex-end;
   padding-left: 0;
-}
-
-.blog-footer li:first-child {
-  margin-right: auto;
-}
-
-.blog-footer li + li {
-  margin-left: 0.5rem;
 }
 
 .blog-footer li {
   color: #999999;
   font-size: 0.75rem;
-  height: 1.5rem;
   letter-spacing: 1px;
   line-height: 1.5rem;
   text-align: center;
   text-transform: uppercase;
   position: relative;
   white-space: nowrap;
+  margin: .5em;
 }
 .blog-footer li a {
   color: #999999;
