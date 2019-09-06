@@ -3,7 +3,7 @@
     <div class="blog-header">
       <div class="blog-cover" :style="{'background-image': `url(${blog.img})`}">
         <div class="blog-author">
-          <h3>{{blog.author}}</h3>
+          <h3>{{blog.author.name}}</h3>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
         <li v-if="blog.updatedAt" class="published-date">{{blog.updatedAt | timeago}}</li>
         <li v-if="full" class="published-date">
           <img src="../assets/blogger-logo.png" height="25" />
-          <span class="ml-1">{{blog.author}}</span>
+          <span class="ml-1">{{blog.author.name}}</span>
         </li>
       </ul>
     </div>

@@ -23,7 +23,7 @@ function toastError(error) {
     let data = error.response.data
     let text = data.message ? data.message : data.error ? data.error : error.message
     title = `${error.code} ${title}`
-    toast({ title, text, type: "error" })
+    toast({ title, text, type: "error", timer: 15000 })
 }
 
 function confirm({ title, text, type, confirmButtonText = 'Ok', cancelButtonText = 'Cancel' }) {
