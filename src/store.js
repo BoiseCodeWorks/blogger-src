@@ -12,13 +12,13 @@ const baseURL = '/'
 
 // const baseURL = '//localhost:3000'
 let _auth = Axios.create({
-  baseURL: baseURL + "/account",
+  baseURL: baseURL + "account",
   timeout: 5000,
   withCredentials: true
 })
 
 let _api = Axios.create({
-  baseURL: baseURL + '/api',
+  baseURL: baseURL + 'api',
   timeout: 5000,
   withCredentials: true
 })
